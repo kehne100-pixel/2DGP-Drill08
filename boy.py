@@ -92,15 +92,17 @@ class AutoRun:
     def __init__(self, boy):
         self.boy = boy
 
-    def enter(self):
+    def enter(self,e):
         self.start_time = get_time()
         self.boy.dir = -1
         self.boy.face_dir = -1
         print("AutoRun Start")
 
 
-    def exit(self):
+    def exit(self,e):
         self.boy.dir = 0
+        print("AutoRin End")
+
 
 
     def do(self):
