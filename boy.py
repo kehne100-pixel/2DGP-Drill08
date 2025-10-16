@@ -106,6 +106,18 @@ class AutoRun:
 
 
     def do(self):
+        self.boy.frame = (self.boy.frame + 1) % 8
+        self.boy.x += self.boy.dir * 10
+        self.boy.x = max(25, min(775, self.boy.x))
+
+        if self.boy.x <= 25:
+            self.boy.dir = 1
+            self.boy.face_dir = 1
+        elif self.boy.x >= 775:
+            self.boy.dir = -1
+            self.boy.face_dir = -1
+
+
 
 
     def draw(self):
