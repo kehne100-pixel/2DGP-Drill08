@@ -100,6 +100,7 @@ class AutoRun:
 
 
     def exit(self):
+        self.boy.dir = 0
 
 
     def do(self):
