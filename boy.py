@@ -117,6 +117,9 @@ class AutoRun:
             self.boy.dir = -1
             self.boy.face_dir = -1
 
+            if get_time() - self.start_time > 5:
+                self.boy.state_machine.handle_state_event(('TIME_OUT', 0))
+
 
 
 
