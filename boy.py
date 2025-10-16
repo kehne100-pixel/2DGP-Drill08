@@ -39,31 +39,13 @@ class Run:
         self.boyx = max(25, min(775, self.boy.x))
 
     def draw(self):
-        if self.boy.face_dir == 1: # right
-            self.boy.image.clip_draw(self.boy.frame * 100, 100, 100, 100, self.boy.x, self.boy.y)
-        else: # face_dir == -1: # left
-            self.boy.image.clip_draw(self.boy.frame * 100, 0, 100, 100, self.boy.x, self.boy.y)
+        if self.boy.face_dir == 1:
+            self.boy.image.clip_draw(self.boy.frame * 100, 100, 100, 100,
+                                     self.boy.x, self.boy.y, 100, 100)
+        else:
+            self.boy.image.clip_draw(self.boy.frame * 100, 0, 100, 100,
+                                     self.boy.x, self.boy.y, 100, 100)
 
-
-class Sleep:
-
-    def __init__(self, boy):
-        self.boy = boy
-
-    def enter(self, e):
-        self.boy.dir = 0
-
-    def exit(self, e):
-        pass
-
-    def do(self):
-        self.boy.frame = (self.boy.frame + 1) % 8
-
-    def draw(self):
-        if self.boy.face_dir == 1: # right
-            self.boy.image.clip_composite_draw(self.boy.frame * 100, 300, 100, 100, 3.141592/2, '', self.boy.x, self.boy.y-25, 100, 100)
-        else: # face_dir == -1: # left
-            self.boy.image.clip_composite_draw(self.boy.frame * 100, 200, 100, 100, -3.141592/2, '', self.boy.x, self.boy.y-25, 100, 100)
 
 
 class Idle:
@@ -143,17 +125,17 @@ class Boy:
         self.image = load_image('animation_sheet.png')
 
         self.IDLE = Idle(self)
-        self.Sleep = Sleep(self)
         self.Run = Run(self)
+        self.AutoRun = AutoRun(self)
+
         self.state_machine = StateMachine(
             self.IDLE,
             {
-                self.Sleep: {space_down: self.IDLE},
-                self.IDLE : {right_up : self.Run, left_up : self.Run, left_down : self.Run, right_down : self.Run, Time_out : self.Sleep},
-                self.Run : {left_down : self.IDLE, right_down : self.IDLE, left_up : self.IDLE, right_up : self.IDLE}
+                self.IDLE: {right_down: self.Run, left_down: self.Run, a_down: self.AutoRun},
+                self.Run: {left_up: self.IDLE, right_up: self.IDLE, a_down: self.AutoRun},
+                self.AutoRun: {Time_out: self.IDLE, left_down: self.Run, right_down: self.Run}
             }
         )
-
 
     def update(self):
         self.state_machine.update()
@@ -163,4 +145,3 @@ class Boy:
 
     def handle_event(self, event):
         self.state_machine.handle_state_event(('INPUT', event))
-        pass
