@@ -36,6 +36,7 @@ class Run:
     def do(self):
         self.boy.frame = (self.boy.frame + 1) % 8
         self.boy.x += self.boy.dir * 5
+        self.boyx = max(25, min(775, self.boy.x))
 
     def draw(self):
         if self.boy.face_dir == 1: # right
