@@ -3,7 +3,7 @@ from sdl2 import SDL_KEYDOWN, SDL_KEYUP, SDLK_SPACE, SDLK_RIGHT, SDLK_LEFT, SDLK
 
 from state_machine import StateMachine
 
-# 이벤트 체크 함수들
+
 def right_down(e): return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
 def right_up(e): return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_RIGHT
 def left_down(e): return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LEFT
@@ -12,7 +12,7 @@ def a_down(e): return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key 
 def Time_out(e): return e[0] == 'TIME_OUT'
 
 
-# ------------------- Run 상태 -------------------
+
 class Run:
     def __init__(self, boy):
         self.boy = boy
@@ -38,7 +38,7 @@ class Run:
             self.boy.image.clip_draw(self.boy.frame * 100, 0, 100, 100, self.boy.x, self.boy.y, 100, 100)
 
 
-# ------------------- Idle 상태 -------------------
+
 class Idle:
     def __init__(self, boy):
         self.boy = boy
@@ -60,14 +60,14 @@ class Idle:
             self.boy.image.clip_draw(self.boy.frame * 100, 200, 100, 100, self.boy.x, self.boy.y, 100, 100)
 
 
-# ------------------- AutoRun 상태 -------------------
+
 class AutoRun:
     def __init__(self, boy):
         self.boy = boy
 
     def enter(self, e):
         self.start_time = get_time()
-        self.boy.dir = -1  # Idle에서 'a' 누르면 왼쪽으로 자동 이동
+        self.boy.dir = -1
         self.boy.face_dir = -1
         print("AutoRun Start")
 
@@ -77,10 +77,10 @@ class AutoRun:
 
     def do(self):
         self.boy.frame = (self.boy.frame + 1) % 8
-        self.boy.x += self.boy.dir * 10  # 더 빠른 속도
+        self.boy.x += self.boy.dir * 10
         self.boy.x = max(25, min(775, self.boy.x))
 
-        # 화면 끝에서 방향 반전
+
         if self.boy.x <= 25:
             self.boy.dir = 1
             self.boy.face_dir = 1
@@ -88,19 +88,19 @@ class AutoRun:
             self.boy.dir = -1
             self.boy.face_dir = -1
 
-        # 5초 경과 시 Idle 상태 복귀
+
         if get_time() - self.start_time > 5:
             self.boy.state_machine.handle_state_event(('TIME_OUT', 0))
 
     def draw(self):
-        # AutoRun에서는 캐릭터가 커지고 속도가 빠름
+
         if self.boy.face_dir == 1:
             self.boy.image.clip_draw(self.boy.frame * 100, 100, 100, 100, self.boy.x, self.boy.y, 150, 150)
         else:
             self.boy.image.clip_draw(self.boy.frame * 100, 0, 100, 100, self.boy.x, self.boy.y, 150, 150)
 
 
-# ------------------- Boy 클래스 -------------------
+
 class Boy:
     def __init__(self):
         self.x, self.y = 400, 90
